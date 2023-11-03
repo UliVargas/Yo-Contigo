@@ -1,0 +1,71 @@
+<section class="section-container">
+  <h2>Formulario de Usuario</h2>
+
+  <form
+    [formGroup]="applyForm"
+    (ngSubmit)="onSubmit({ name: user.name })"
+    class="form-container"
+  >
+    <mat-form-field>
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" [ngModel]="user.name" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Correo electrónico</mat-label>
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        [ngModel]="user.email"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Teléfono</mat-label>
+      <input
+        matInput
+        type="tel"
+        formControlName="phone"
+        [ngModel]="user.phone"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Fecha de nacimiento</mat-label>
+      <input
+        matInput
+        type="date"
+        formControlName="birthdate"
+        [ngModel]="user.birthdate"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Género</mat-label>
+      <mat-select formControlName="gender" [ngModel]="user.gender">
+        <mat-option value="male">Masculino</mat-option>
+        <mat-option value="female">Femenino</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      value="update"
+      *ngIf="user.name !== ''"
+    >
+      {{ isLoading ? "Cargando" : "Actualizar" }}
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      *ngIf="user.name === ''"
+      [disabled]="applyForm.invalid"
+    >
+      {{ isLoading ? "Cargando" : "Crear" }}
+    </button>
+  </form>
+</section>
