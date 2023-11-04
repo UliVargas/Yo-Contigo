@@ -1,71 +1,121 @@
-<section class="section-container">
-  <h2>Formulario de Usuario</h2>
-
+<section class="section-container w-[600px] mx-auto border p-10">
+  <h2 class="text-xl font-semibold mb-4 text-center">Formulario de Usuario</h2>
   <form
-    [formGroup]="applyForm"
-    (ngSubmit)="onSubmit({ name: user.name })"
-    class="form-container"
+    [formGroup]="form"
+    class="w-full p-10 flex flex-col gap-3"
+    (submit)="onSubmit()"
   >
-    <mat-form-field>
-      <mat-label>Nombre</mat-label>
-      <input matInput formControlName="name" [ngModel]="user.name" />
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Correo electrónico</mat-label>
+    <div class="mb-4">
+      <label for="name" class="block font-medium">Nombre:</label>
       <input
-        matInput
-        type="email"
+        required
+        id="name"
+        formControlName="name"
+        [(ngModel)]="user.name"
+        class="input input-bordered input-primary w-full"
+      />
+      <p
+        class="text-red-500"
+        *ngIf="this.form.get('name')?.errors?.['required'] && this.form.get('name')?.touched"
+      >
+        El nombre no puede quedar vacío
+      </p>
+    </div>
+
+    <div class="mb-4">
+      <label for="email" class="block font-medium">Correo electrónico:</label>
+      <input
+        required
+        id="email"
         formControlName="email"
-        [ngModel]="user.email"
+        type="email"
+        [(ngModel)]="user.email"
+        class="input input-bordered input-primary w-full"
       />
-    </mat-form-field>
+      <p
+        class="text-red-500"
+        *ngIf="this.form.get('email')?.errors?.['required'] && this.form.get('email')?.touched"
+      >
+        El correo no puede quedar vacío
+      </p>
+      <p
+        class="text-red-500"
+        *ngIf="this.form.get('email')?.errors?.['email'] && this.form.get('email')?.touched"
+      >
+        Ingresa un correo válido
+      </p>
+    </div>
 
-    <mat-form-field>
-      <mat-label>Teléfono</mat-label>
+    <div class="mb-4">
+      <label for="phone" class="block font-medium">Teléfono:</label>
       <input
-        matInput
-        type="tel"
+        required
+        id="phone"
         formControlName="phone"
-        [ngModel]="user.phone"
+        type="tel"
+        [(ngModel)]="user.phone"
+        class="input input-bordered input-primary w-full"
       />
-    </mat-form-field>
+      <p
+        class="text-red-500"
+        *ngIf="this.form.get('phone')?.errors?.['required'] && this.form.get('phone')?.touched"
+      >
+        El teléfono no puede quedar vacío
+      </p>
 
-    <mat-form-field>
-      <mat-label>Fecha de nacimiento</mat-label>
+      <p
+        class="text-red-500"
+        *ngIf="this.form.get('phone')?.errors?.['pattern'] && this.form.get('phone')?.touched"
+      >
+        Ingrese un teléfono válido de 10 dígitos
+      </p>
+    </div>
+
+    <div class="mb-4">
+      <label for="birthdate" class="block font-medium"
+        >Fecha de nacimiento:</label
+      >
       <input
-        matInput
-        type="date"
+        required
+        id="birthdate"
         formControlName="birthdate"
-        [ngModel]="user.birthdate"
+        type="date"
+        [(ngModel)]="user.birthdate"
+        class="input input-bordered input-primary w-full"
       />
-    </mat-form-field>
+      <p
+        class="text-red-500"
+        *ngIf="this.form.get('birthdate')?.errors?.['required'] && this.form.get('birthdate')?.touched"
+      >
+        La fecha de nacimiento no puede quedar vacío
+      </p>
+    </div>
 
-    <mat-form-field>
-      <mat-label>Género</mat-label>
-      <mat-select formControlName="gender" [ngModel]="user.gender">
-        <mat-option value="male">Masculino</mat-option>
-        <mat-option value="female">Femenino</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="mb-4">
+      <label for="gender" class="block font-medium">Género:</label>
+      <select
+        id="gender"
+        formControlName="gender"
+        [(ngModel)]="user.gender"
+        class="select select-primary w-full"
+      >
+        <option value="male">Masculino</option>
+        <option value="female">Femenino</option>
+      </select>
+      <p
+        class="text-red-500"
+        *ngIf="this.form.get('gender')?.errors?.['required'] && this.form.get('gender')?.touched"
+      >
+        El género no puede quedar vacío
+      </p>
+    </div>
 
     <button
-      mat-raised-button
-      color="primary"
       type="submit"
-      value="update"
-      *ngIf="user.name !== ''"
+      class="btn btn-primary"
+      [disabled]="form.value.name === '' || form.invalid || isLoading"
     >
-      {{ isLoading ? "Cargando" : "Actualizar" }}
-    </button>
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      *ngIf="user.name === ''"
-      [disabled]="applyForm.invalid"
-    >
-      {{ isLoading ? "Cargando" : "Crear" }}
+      {{ isLoading ? "Cargando..." : "Enviar" }}
     </button>
   </form>
 </section>

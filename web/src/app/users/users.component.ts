@@ -5,7 +5,6 @@ import { UsersService } from '../services/users/users.service';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css'],
 })
 export class UsersComponent {
   users: Pick<User, 'id' | 'name' | 'email'>[] = []
@@ -18,8 +17,24 @@ export class UsersComponent {
     });
   }
 
-  displayedColumns: string[] = ['id', 'name', 'email', 'actions'];
-  dataSource: Pick<User, 'id' | 'name' | 'email'>[] = [];
+  displayedColumns: {
+    key: string;
+    header: string;
+  }[] = [
+    {
+      key: 'id', header: 'ID'
+    },
+    {
+      key: 'name', header: 'Nombre'
+    },
+    {
+      key: 'email', header: 'Correo'
+    },
+    {
+      key: 'actions', header: 'Acciones'
+    }
+  ];
+  dataSource: any[] = [];
 
   selectedUser?: User;
   onSelect(user: User): void {

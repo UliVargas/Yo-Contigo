@@ -1,20 +1,19 @@
 import { Component, Input, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from '../models/user.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from '../services/users/users.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
-  styleUrls: ['./user-form.component.css']
 })
 export class UserFormComponent {
   userService: UsersService = inject(UsersService)
   @Input() isLoading: boolean = false
 
-  @Input() user: User = {
+  user: User = {
     id: '',
     name: '',
     phone: '',
@@ -23,22 +22,26 @@ export class UserFormComponent {
     gender: ''
   };
 
-  userId: string | undefined = ''
-
-  constructor(private readonly route: ActivatedRoute, private _snackBar: MatSnackBar) {
+  constructor(private readonly route: ActivatedRoute, private readonly router: Router, private toastr: ToastrService) {
     this.route.queryParamMap
       .subscribe((params) => {
-        this.userId = params.get('userId') ?? undefined;
+        const userId = params.get('userId');
+        if (userId) {
+          this.userService.getUserById(userId).then(user => {
+            this.user = user;
+            this.form.setValue({
+              birthdate: user.birthdate,
+              email: user.email,
+              gender: user.gender,
+              name: user.name,
+              phone: user.phone,
+            });
+          });
+        }
       });
-
-    if (this.userId) {
-      this.userService.getUserById(this.userId).then(user => {
-        this.user = user
-      })
-    }
   }
 
-  applyForm = new FormGroup({
+  form = new FormGroup({
     name: new FormControl(this.user.name, {
       validators: [
         Validators.required
@@ -46,7 +49,8 @@ export class UserFormComponent {
     }),
     email: new FormControl(this.user.email, {
       validators: [
-        Validators.required
+        Validators.required,
+        Validators.email
       ]
     }),
     phone: new FormControl(this.user.phone, {
@@ -69,48 +73,41 @@ export class UserFormComponent {
     })
   });
 
-
-  async onSubmit({ name }: { name: string }) {
+  async onSubmit() {
 
     const newUser = {
-      name: this.applyForm.value.name ?? '',
-      email: this.applyForm.value.email ?? '',
-      phone: this.applyForm.value.phone ?? '',
-      birthdate: this.applyForm.value.birthdate ?? '',
-      gender: this.applyForm.value.gender ?? ''
+      name: this.form.value.name ?? '',
+      email: this.form.value.email ?? '',
+      phone: this.form.value.phone ?? '',
+      birthdate: this.form.value.birthdate ?? '',
+      gender: this.form.value.gender ?? ''
     }
 
-    if (name) {
+    if (this.user.id) {
       try {
         this.isLoading = true
         await this.userService.updateUser(this.user.id, newUser)
           .then(() => {
-            this._snackBar.open('Usuario actualizado correctamente', '', {
-              duration: 3000
-            })
+            this.toastr.success('Usuario actualizado correctamente')
+            this.router.navigate(['/home'])
           })
           .finally(() => {
             this.isLoading = false
           })
       } catch (error: any) {
-        this._snackBar.open(error.response.data.message, '', {
-          duration: 3000
-        })
+        this.toastr.error(error.response.data.message)
       }
     } else {
       try {
         this.isLoading = true
         await this.userService.createUser(newUser).then(() => {
-          this._snackBar.open('Usuario creado correctamente', '', {
-            duration: 3000
-          })
+          this.toastr.success('Usuario creado correctamente')
+          this.router.navigate(['/home'])
         }).finally(() => {
           this.isLoading = false
         })
-      } catch(error: any) {
-        this._snackBar.open(error.response.data.message, '', {
-          duration: 3000
-        })
+      } catch (error: any) {
+        this.toastr.error(error.response.data.message)
       }
     }
   }

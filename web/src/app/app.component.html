@@ -1,15 +1,20 @@
-<header>
-    <mat-toolbar>
+<header class="navbar bg-neutral text-neutral-content">
+  <div class="flex-1">
+    <a routerLink="/" class="btn btn-ghost normal-case text-xl">
       <h1>{{ title }}</h1>
-      <span class="spacer"></span>
-      <nav class="nav">
-        <a routerLink="/">Inicio</a>
-        <a routerLink="/form-user">Nuevo Usuario</a>
-      </nav>
-    </mat-toolbar>
-  
-  
+    </a>
+  </div>
+  <nav class="flex-none">
+    <ul class="menu menu-horizontal px-1">
+      <li>
+        <a class="link text-[16px]" routerLink="/">Inicio</a>
+      </li>
+      <li>
+        <a class="link text-[16px]" routerLink="/form-user">Nuevo Usuario</a>
+      </li>
+    </ul>
+  </nav>
 </header>
-<main class="container">
+<main class="container mx-auto py-20">
   <router-outlet></router-outlet>
 </main>

@@ -34,11 +34,16 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const user = await this.findOne(id);
-    return await this.usersRepository.save({
-      ...user,
-      ...updateUserDto,
-    });
+    try {
+      const user = await this.findOne(id);
+      return await this.usersRepository.save({
+        ...user,
+        ...updateUserDto,
+      });
+    } catch (error) {
+      this.logger.error(error);
+      DBErrors(error);
+    }
   }
 
   async remove(id: string) {
