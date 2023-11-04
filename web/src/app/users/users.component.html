@@ -3,7 +3,7 @@
   <div class="overflow-x-auto py-10">
     <table class="table border">
       <thead>
-        <tr class="bg-primary text-white text-md">
+        <tr class="bg-neutral text-white text-md">
           <ng-container *ngFor="let column of displayedColumns">
             <th class="p-4 border-b border-gray-300 text-[15px]">{{ column.header }}</th>
           </ng-container>
@@ -20,7 +20,7 @@
               <!-- Si es la columna 'actions', agrega el enlace -->
               <ng-template #actionsColumn>
                 <a class="btn btn-outline" [routerLink]="['/form-user']" [queryParams]="{ userId: element.id }">
-                  <ng-icon name="heroPencilSquare" class="text-primary text-2xl"></ng-icon>
+                  <ng-icon name="heroPencilSquare" class="text-secondary text-2xl"></ng-icon>
                   Editar
                 </a>
               </ng-template>

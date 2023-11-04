@@ -12,7 +12,7 @@
         id="name"
         formControlName="name"
         [(ngModel)]="user.name"
-        class="input input-bordered input-primary w-full"
+        class="input input-bordered input-secondary w-full"
       />
       <p
         class="text-red-500"
@@ -30,7 +30,7 @@
         formControlName="email"
         type="email"
         [(ngModel)]="user.email"
-        class="input input-bordered input-primary w-full"
+        class="input input-bordered input-secondary w-full"
       />
       <p
         class="text-red-500"
@@ -54,7 +54,7 @@
         formControlName="phone"
         type="tel"
         [(ngModel)]="user.phone"
-        class="input input-bordered input-primary w-full"
+        class="input input-bordered input-secondary w-full"
       />
       <p
         class="text-red-500"
@@ -81,7 +81,7 @@
         formControlName="birthdate"
         type="date"
         [(ngModel)]="user.birthdate"
-        class="input input-bordered input-primary w-full"
+        class="input input-bordered input-secondary w-full"
       />
       <p
         class="text-red-500"
@@ -97,7 +97,7 @@
         id="gender"
         formControlName="gender"
         [(ngModel)]="user.gender"
-        class="select select-primary w-full"
+        class="select select-secondary w-full"
       >
         <option value="male">Masculino</option>
         <option value="female">Femenino</option>
@@ -110,12 +110,20 @@
       </p>
     </div>
 
-    <button
+    <ng-container *ngIf="!isLoading; else loadingButton">
+      <button
       type="submit"
-      class="btn btn-primary"
-      [disabled]="form.value.name === '' || form.invalid || isLoading"
+      class="btn btn-secondary mt-10"
+      [disabled]="form.value.name === '' || form.invalid"
     >
-      {{ isLoading ? "Cargando..." : "Enviar" }}
+      Enviar
     </button>
+    </ng-container>
+    <ng-template #loadingButton>
+      <button class="btn" class="btn btn-secondary mt-10" [disabled]="isLoading">
+        <span class="loading loading-spinner"></span>
+        Cargando...
+      </button>
+    </ng-template>
   </form>
 </section>
